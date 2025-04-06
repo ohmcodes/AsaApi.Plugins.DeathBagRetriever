@@ -22,6 +22,12 @@ void FindPlayerCorpse(AShooterPlayerController* player_controller)
 
 	if (!newInvComp) return;
 
+	if (player_controller->LastControlledPlayerCharacterField().Get())
+	{
+		Log::GetLog()->info("LastControlledPlayerCharacterField is valid!", __FUNCTION__);
+	}
+
+#if 0
 	TArray<AShooterCharacter*> corpses = DeathBagRetriever::corpses.FilterByPredicate([&](AShooterCharacter* sc)
 		{
 			return static_cast<int>(sc->GetLinkedPlayerDataID()) == player_controller->GetLinkedPlayerID();
@@ -99,7 +105,8 @@ void FindPlayerCorpse(AShooterPlayerController* player_controller)
 
 		//DeleteItems(corpseInvComp, forDelete);
 	}
-	
+
+#endif
 }
 
 void FindItemCacheBag(AShooterCharacter* shooter_character)
