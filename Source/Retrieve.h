@@ -34,7 +34,9 @@ void FindPlayerCorpse(AShooterPlayerController* player_controller)
 	}
 	FVector Dest = player_controller->LastControlledPlayerCharacterField().Get()->GetLocation();
 	FRotator Rot = FRotator(double(0), double(0), double(0));
-	player_controller->TeleportTo(&Dest, &Rot, true, true);
+	player_controller->TeleportTo(&Dest, &Rot, false, false);
+
+	Log::GetLog()->info("{} {} {}",Dest.X, Dest.Y, Dest.Z);
 
 	UPrimalInventoryComponent* corpseInvComp = player_controller->LastControlledPlayerCharacterField().Get()->MyInventoryComponentField();
 
