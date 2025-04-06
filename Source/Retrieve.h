@@ -40,7 +40,8 @@ void FindPlayerCorpse(AShooterPlayerController* player_controller)
 	FRotator Rot = UE::Math::TRotator<double>(0,0,0);
 	//character->TeleportTo(&Dest, &Rot, false, false);
 	UPrimalGlobals::SimpleTeleportTo(player_controller->LastControlledPlayerCharacterField().Get()->OwnerField(), Dest, Rot);
-	//Log::GetLog()->info("{} {} {}",Dest.X, Dest.Y, Dest.Z);
+
+	Log::GetLog()->info("{} {} {}",Dest.X, Dest.Y, Dest.Z);
 	
 	UPrimalInventoryComponent* corpseInvComp = player_controller->LastControlledPlayerCharacterField().Get()->MyInventoryComponentField();
 
