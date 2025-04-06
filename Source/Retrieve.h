@@ -14,6 +14,12 @@ void FindPlayerCorpse(AShooterCharacter* shooter_character)
 	Log::GetLog()->info("{} called!", __FUNCTION__);
 	AShooterPlayerController* spc = static_cast<AShooterPlayerController*>(shooter_character->GetOwnerController());
 
+	if (!spc)
+	{
+		Log::GetLog()->info("AShooterPlayerController is invalid!");
+		return;
+	}
+
 	UPrimalInventoryComponent* newInvComp = spc->GetPlayerInventoryComponent();
 
 	if (!newInvComp) return;
