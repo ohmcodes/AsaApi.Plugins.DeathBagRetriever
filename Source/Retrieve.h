@@ -9,61 +9,73 @@ void DeleteItems(UPrimalInventoryComponent* inv_comp, TArray<UPrimalItem*> for_d
 	}
 }
 
-void FindPlayerCorpse(AShooterPlayerController* player_controller)
+void FindPlayerCorpse(AShooterCharacter* shooter_character)
 {
 	Log::GetLog()->info("{} called!", __FUNCTION__);
+	AShooterPlayerController* spc = static_cast<AShooterPlayerController*>(shooter_character->GetOwnerController());
 
-	UPrimalInventoryComponent* corpseInvComp = player_controller->LastDeathPrimalCharacterField()->MyInventoryComponentField();
-
-	if (!corpseInvComp) return;
-
-	UPrimalInventoryComponent* newInvComp = player_controller->GetPlayerInventoryComponent();
+	UPrimalInventoryComponent* newInvComp = spc->GetPlayerInventoryComponent();
 
 	if (!newInvComp) return;
 
-	// Handle Equipped items
-	TArray<UPrimalItem*> equippedItems = corpseInvComp->EquippedItemsField();
-	TArray<UPrimalItem*> forDelete;
-
-	for (UPrimalItem* eItem : equippedItems)
-	{
-		bool isEquipped;
-		if (!eItem->IsBroken())
+	TArray<AShooterCharacter*> corpses = DeathBagRetriever::corpses.FilterByPredicate([&](AShooterCharacter* sc)
 		{
-			isEquipped = true;
+			return sc->GetLinkedPlayerDataID() == shooter_character->GetLinkedPlayerDataID();
+		});
+
+	for (AShooterCharacter* corpse : corpses)
+	{
+		AShooterCharacter* corpseCharacter = static_cast<AShooterCharacter*>(corpse);
+		
+		UPrimalInventoryComponent* corpseInvComp = corpseCharacter->MyInventoryComponentField();
+
+		if (!corpseInvComp) return;
+
+		// Handle Equipped items
+		TArray<UPrimalItem*> equippedItems = corpseInvComp->EquippedItemsField();
+		TArray<UPrimalItem*> forDelete;
+
+		for (UPrimalItem* eItem : equippedItems)
+		{
+			bool isEquipped;
+			if (!eItem->IsBroken())
+			{
+				isEquipped = true;
+			}
+
+			forDelete.Add(eItem);
+
+			eItem->AddToInventory(newInvComp, isEquipped, true, &eItem->ItemIDField(), false, false, false, false, false);
 		}
 
-		forDelete.Add(eItem);
+		// Handle Inventory items
+		TArray<UPrimalItem*> invItems = corpseInvComp->InventoryItemsField();
 
-		eItem->AddToInventory(newInvComp, isEquipped, true, &eItem->ItemIDField(), false ,false, false, false, false);
+		for (UPrimalItem* iItem : invItems)
+		{
+			if (iItem->bIsEngram().Get()) continue;
+
+			// TODO expose this in config
+			// Resources
+			if (iItem->MyItemTypeField().GetIntValue() == 5) continue;
+
+			// Artifact
+			if (iItem->MyItemTypeField().GetIntValue() == 8) continue;
+
+			// Fertile egg
+			if (iItem->bIsEgg().Get() && iItem->UsesDurability()) continue;
+
+			// remove items
+			forDelete.Add(iItem);
+
+			// finaly transfer
+			bool addToSlot = iItem->SlotIndexField() > -1;
+			iItem->AddToInventory(newInvComp, false, addToSlot, &iItem->ItemIDField(), true, true, false, false, false);
+		}
+
+		DeleteItems(corpseInvComp, forDelete);
 	}
-
-	// Handle Inventory items
-	TArray<UPrimalItem*> invItems = corpseInvComp->InventoryItemsField();
-
-	for (UPrimalItem* iItem : invItems)
-	{
-		if (iItem->bIsEngram().Get()) continue;
-
-		// TODO expose this in config
-		// Resources
-		if (iItem->MyItemTypeField().GetIntValue() == 5) continue;
-
-		// Artifact
-		if (iItem->MyItemTypeField().GetIntValue() == 8) continue;
-
-		// Fertile egg
-		if (iItem->bIsEgg().Get() && iItem->UsesDurability()) continue;
-
-		// remove items
-		forDelete.Add(iItem);
-
-		// finaly transfer
-		bool addToSlot = iItem->SlotIndexField() > -1;
-		iItem->AddToInventory(newInvComp, false, addToSlot, &iItem->ItemIDField(), true, true, false, false, false);
-	}
-
-	DeleteItems(corpseInvComp, forDelete);
+	
 }
 
 void FindItemCacheBag(AShooterCharacter* shooter_character)
@@ -138,26 +150,28 @@ void RetrieveBag(AShooterCharacter* shooter_character)
 
 	AShooterPlayerController* spc = static_cast<AShooterPlayerController*>(shooter_character->GetOwnerController());
 
-	if (!spc) return;
+	
 
-	if (!spc->LastDeathPrimalCharacterField().Get())
-	{
-		Log::GetLog()->info("LastDeathPrimalCharacterField is invalid!");
-		return;
-	}
+	//if (!spc) return;
 
-	// Player Corpse still available
-	if (spc->LastDeathPrimalCharacterField().Get())
-	{
-		Log::GetLog()->info("Corpse Exists!");
-		FindPlayerCorpse(spc);
-	}
-	// Item Cache Bag 
-	else
-	{
-		Log::GetLog()->info("Corpse Doesnt Exists!");
-		FindItemCacheBag(shooter_character);
-	}
+	//if (!spc->LastDeathPrimalCharacterField().Get())
+	//{
+	//	Log::GetLog()->info("LastDeathPrimalCharacterField is invalid!");
+	//	return;
+	//}
+
+	//// Player Corpse still available
+	//if (spc->LastDeathPrimalCharacterField().Get())
+	//{
+	//	Log::GetLog()->info("Corpse Exists!");
+	//	FindPlayerCorpse(spc);
+	//}
+	//// Item Cache Bag 
+	//else
+	//{
+	//	Log::GetLog()->info("Corpse Doesnt Exists!");
+	//	FindItemCacheBag(shooter_character);
+	//}
 
 
 }

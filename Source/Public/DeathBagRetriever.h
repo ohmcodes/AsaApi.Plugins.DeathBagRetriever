@@ -27,4 +27,6 @@ namespace DeathBagRetriever
 
 	inline int RetrievTrigger = 0;
 
+	inline TArray<AShooterCharacter*> corpses;
+
 }
