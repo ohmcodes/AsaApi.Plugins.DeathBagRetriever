@@ -28,7 +28,7 @@ void AddOrRemoveCommands(bool addCmd = true)
 		}
 	}
 
-	const FString Teleport = DeathBagRetriever::config["Commands"]["KillMeCMD"].get<std::string>().c_str();
+	const FString Teleport = DeathBagRetriever::config["Commands"]["TeleportCMD"].get<std::string>().c_str();
 	if (!Teleport.IsEmpty())
 	{
 		if (addCmd)
