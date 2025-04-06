@@ -20,6 +20,9 @@ DECLARE_HOOK(AShooterCharacter_Die, bool, AShooterCharacter*, float, FDamageEven
 bool Hook_AShooterCharacter_Die(AShooterCharacter* shooter_character, float KillingDamage, FDamageEvent* DamageEvent, AController* Killer, AActor* DamageCauser)
 {
 	FString playername = shooter_character->PlayerNameField();
+	
+	FVector loc = shooter_character->GetLocation();
+	Log::GetLog()->info("Death loc {} {} {}", loc.X, loc.Y, loc.Z);
 
 	Log::GetLog()->info("Player: {}, Dies!", playername.ToString());
 
