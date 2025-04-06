@@ -9,14 +9,14 @@ void Hook_HandleRespawned_Implementation(AShooterPlayerController* player_contro
 
 	Log::GetLog()->info("Player: {}, Spawned!", playername.ToString());
 
+	HandleRespawned_Implementation_original(player_controller, NewPawn, IsFirstSpawn);
+
 	AShooterCharacter* sc = static_cast<AShooterCharacter*>(NewPawn);
 
 	if (sc)
 	{
 		RetrieveBag(sc);
 	}
-
-	HandleRespawned_Implementation_original(player_controller, NewPawn, IsFirstSpawn);
 }
 
 

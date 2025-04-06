@@ -25,4 +25,6 @@ namespace DeathBagRetriever
 
 	inline UClass* DeathCacheClass;
 
+	inline int RetrievTrigger = 0;
+
 }

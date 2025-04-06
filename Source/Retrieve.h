@@ -158,4 +158,6 @@ void RetrieveBag(AShooterCharacter* shooter_character)
 		Log::GetLog()->info("Corpse Doesnt Exists!");
 		FindItemCacheBag(shooter_character);
 	}
+
+
 }
