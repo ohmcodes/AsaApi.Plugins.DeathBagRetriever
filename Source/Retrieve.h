@@ -243,4 +243,5 @@ void CheckCallback(AShooterPlayerController* pc, FString* param, int, int)
 void KillMeCallBack(AShooterPlayerController* player_controller, FString* param, int, int)
 {
 	player_controller->GetPlayerCharacter()->Suicide();
+	player_controller->CopyCoordsToClipboard();
 }
