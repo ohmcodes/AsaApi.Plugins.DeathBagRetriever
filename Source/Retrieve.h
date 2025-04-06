@@ -20,20 +20,26 @@ void FindPlayerCorpse(AShooterPlayerController* player_controller)
 
 	UPrimalInventoryComponent* newInvComp = player_controller->GetPlayerInventoryComponent();
 
-	if (!newInvComp) return;
+	if (!newInvComp)
+	{
+		Log::GetLog()->error("newInvComp is invalid!");
+		return;
+	}
 
 	if (!player_controller->LastControlledPlayerCharacterField().Get())
 	{
-		Log::GetLog()->info("LastControlledPlayerCharacterField is invalid!");
+		Log::GetLog()->error("LastControlledPlayerCharacterField is invalid!");
 
 		return;
 	}
 
-	AShooterCharacter* corpseCharacter = static_cast<AShooterCharacter*>(player_controller->LastControlledPlayerCharacterField().Get());
+	UPrimalInventoryComponent* corpseInvComp = player_controller->LastControlledPlayerCharacterField().Get()->MyInventoryComponentField();
 
-	UPrimalInventoryComponent* corpseInvComp = corpseCharacter->MyInventoryComponentField();
-
-	if (!corpseInvComp) return;
+	if (!corpseInvComp)
+	{
+		Log::GetLog()->error("corpseInvComp is invalid!");
+		return;
+	}
 
 	// Handle Equipped items
 	TArray<UPrimalItem*> equippedItems = corpseInvComp->EquippedItemsField();
