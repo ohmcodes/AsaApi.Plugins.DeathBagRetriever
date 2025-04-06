@@ -22,15 +22,73 @@ void FindPlayerCorpse(AShooterPlayerController* player_controller)
 
 	if (!newInvComp) return;
 
-	if (player_controller->LastDeathPrimalCharacterField().Get())
+	if (!player_controller->LastControlledPlayerCharacterField().Get())
 	{
 		Log::GetLog()->info("LastControlledPlayerCharacterField is invalid!");
+
+		return;
 	}
 
-	if (player_controller->LastControlledPlayerCharacterField().Get())
+	AShooterCharacter* corpseCharacter = static_cast<AShooterCharacter*>(player_controller->LastControlledPlayerCharacterField().Get());
+
+	UPrimalInventoryComponent* corpseInvComp = corpseCharacter->MyInventoryComponentField();
+
+	if (!corpseInvComp) return;
+
+	// Handle Equipped items
+	TArray<UPrimalItem*> equippedItems = corpseInvComp->EquippedItemsField();
+
+	Log::GetLog()->info("equippedItems: {}", equippedItems.Num());
+
+	for (UPrimalItem* eItem : equippedItems)
 	{
-		Log::GetLog()->info("LastControlledPlayerCharacterField is valid!");
+		if (eItem->bIsEngram().Get()) continue;
+		if (eItem->IsItemSkin(true)) continue;
+
+		bool isEquipped;
+		if (!eItem->IsBroken())
+		{
+			isEquipped = true;
+		}
+
+		corpseInvComp->RemoveItem(&eItem->ItemIDField(), false, false, true, false);
+
+		bool addToSlot = eItem->SlotIndexField() > -1;
+		eItem->AddToInventory(newInvComp, isEquipped, addToSlot, &eItem->ItemIDField(), false, false, false, false, false);
+
+		Log::GetLog()->info("item transferred: {}", eItem->DescriptiveNameBaseField().ToString());
 	}
+
+	// Handle Inventory items
+	TArray<UPrimalItem*> invItems = corpseInvComp->InventoryItemsField();
+
+	Log::GetLog()->info("invItems: {}", invItems.Num());
+
+	for (UPrimalItem* iItem : invItems)
+	{
+		if (iItem->bIsEngram().Get()) continue;
+
+		if (iItem->IsItemSkin(true)) continue;
+
+		// TODO expose this in config
+		// Resources
+		if (iItem->MyItemTypeField().GetIntValue() == 5) continue;
+
+		// Artifact
+		if (iItem->MyItemTypeField().GetIntValue() == 8) continue;
+
+		// Fertile egg
+		if (iItem->bIsEgg().Get() && iItem->UsesDurability()) continue;
+
+		corpseInvComp->RemoveItem(&iItem->ItemIDField(), false, true, true, false);
+
+		// finaly transfer
+		bool addToSlot = iItem->SlotIndexField() > -1;
+		iItem->AddToInventory(newInvComp, false, addToSlot, &iItem->ItemIDField(), true, true, false, false, false);
+
+		Log::GetLog()->info("item transferred: {}", iItem->DescriptiveNameBaseField().ToString());
+	}
+
 
 #if 0
 	TArray<AShooterCharacter*> corpses = DeathBagRetriever::corpses.FilterByPredicate([&](AShooterCharacter* sc)
@@ -42,75 +100,8 @@ void FindPlayerCorpse(AShooterPlayerController* player_controller)
 
 	for (AShooterCharacter* corpse : corpses)
 	{
-		AShooterCharacter* corpseCharacter = static_cast<AShooterCharacter*>(corpse);
 		
-		UPrimalInventoryComponent* corpseInvComp = corpseCharacter->MyInventoryComponentField();
-
-		if (!corpseInvComp) continue;
-
-		// Handle Equipped items
-		TArray<UPrimalItem*> equippedItems = corpseInvComp->EquippedItemsField();
-		TArray<UPrimalItem*> forDelete;
-
-		Log::GetLog()->info("equippedItems: {}", equippedItems.Num());
-
-		for (UPrimalItem* eItem : equippedItems)
-		{
-			if (eItem->bIsEngram().Get()) continue;
-			if (eItem->IsItemSkin(true)) continue;
-
-			bool isEquipped;
-			if (!eItem->IsBroken())
-			{
-				isEquipped = true;
-			}
-
-			//forDelete.Add(eItem);
-
-			corpseInvComp->RemoveItem(&eItem->ItemIDField(), false, false, true, false);
-
-			bool addToSlot = eItem->SlotIndexField() > -1;
-			eItem->AddToInventory(newInvComp, isEquipped, addToSlot, &eItem->ItemIDField(), false, false, false, false, false);
-
-			Log::GetLog()->info("item transferred: {}", eItem->DescriptiveNameBaseField().ToString());
-		}
-
-		// Handle Inventory items
-		TArray<UPrimalItem*> invItems = corpseInvComp->InventoryItemsField();
-
-		Log::GetLog()->info("invItems: {}", invItems.Num());
-
-		for (UPrimalItem* iItem : invItems)
-		{
-			if (iItem->bIsEngram().Get()) continue;
-
-			if (iItem->IsItemSkin(true)) continue;
-
-			// TODO expose this in config
-			// Resources
-			if (iItem->MyItemTypeField().GetIntValue() == 5) continue;
-
-			// Artifact
-			if (iItem->MyItemTypeField().GetIntValue() == 8) continue;
-
-			// Fertile egg
-			if (iItem->bIsEgg().Get() && iItem->UsesDurability()) continue;
-
-			// remove items
-			//forDelete.Add(iItem);
-
-			corpseInvComp->RemoveItem(&iItem->ItemIDField(), false, true, true, false);
-
-			// finaly transfer
-			bool addToSlot = iItem->SlotIndexField() > -1;
-			iItem->AddToInventory(newInvComp, false, addToSlot, &iItem->ItemIDField(), true, true, false, false, false);
-
-			Log::GetLog()->info("item transferred: {}", iItem->DescriptiveNameBaseField().ToString());
-		}
-
-		//DeleteItems(corpseInvComp, forDelete);
 	}
-
 #endif
 }
 
