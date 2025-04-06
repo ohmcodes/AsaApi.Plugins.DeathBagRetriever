@@ -1,6 +1,8 @@
 
 void DeleteItems(UPrimalInventoryComponent* inv_comp, TArray<UPrimalItem*> for_delete)
 {
+	Log::GetLog()->info("{} called!", __FUNCTION__);
+
 	for (UPrimalItem* eDelItem : for_delete)
 	{
 		inv_comp->RemoveItem(&eDelItem->ItemIDField(), false, false, true, false);
@@ -9,6 +11,8 @@ void DeleteItems(UPrimalInventoryComponent* inv_comp, TArray<UPrimalItem*> for_d
 
 void FindPlayerCorpse(AShooterPlayerController* player_controller)
 {
+	Log::GetLog()->info("{} called!", __FUNCTION__);
+
 	UPrimalInventoryComponent* corpseInvComp = player_controller->LastDeathPrimalCharacterField().Get()->MyInventoryComponentField();
 
 	if (!corpseInvComp) return;
@@ -64,6 +68,8 @@ void FindPlayerCorpse(AShooterPlayerController* player_controller)
 
 void FindItemCacheBag(AShooterCharacter* shooter_character)
 {
+	Log::GetLog()->info("{} called!", __FUNCTION__);
+
 	UPrimalInventoryComponent* playerInvComp = shooter_character->MyInventoryComponentField();
 
 	if (!playerInvComp) return;
@@ -128,16 +134,20 @@ void FindItemCacheBag(AShooterCharacter* shooter_character)
 
 void RetrieveBag(AShooterCharacter* shooter_character)
 {
+	Log::GetLog()->info("{} called!", __FUNCTION__);
+
 	AShooterPlayerController* spc = static_cast<AShooterPlayerController*>(shooter_character->GetOwnerController());
 
 	// Player Corpse still available
 	if (spc->LastDeathPrimalCharacterField().Get())
 	{
+		Log::GetLog()->info("Corpse Exists!");
 		FindPlayerCorpse(spc);
 	}
 	// Item Cache Bag 
 	else
 	{
+		Log::GetLog()->info("Corpse Doesnt Exists!");
 		FindItemCacheBag(shooter_character);
 	}
 }

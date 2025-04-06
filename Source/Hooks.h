@@ -16,7 +16,7 @@ void Hook_HandleRespawned_Implementation(AShooterPlayerController* player_contro
 		RetrieveBag(sc);
 	}
 
-	return HandleRespawned_Implementation_original(player_controller, NewPawn, IsFirstSpawn);
+	HandleRespawned_Implementation_original(player_controller, NewPawn, IsFirstSpawn);
 }
 
 
