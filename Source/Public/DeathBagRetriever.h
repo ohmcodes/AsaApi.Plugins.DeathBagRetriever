@@ -6,7 +6,7 @@
 
 #include "Requests.h"
 
-namespace PluginTemplate
+namespace DeathBagRetriever
 {
 	inline nlohmann::json config;
 	inline bool isDebug{ false };
@@ -22,5 +22,7 @@ namespace PluginTemplate
 	static API::Requests& req = API::Requests::Get();
 
 	inline std::string lastMessageID;
+
+	inline UClass* DeathCacheClass;
 
 }

@@ -1,5 +1,24 @@
 
 
+DECLARE_HOOK(HandleRespawned_Implementation, void, AShooterPlayerController*, APawn*, bool);
+
+void Hook_HandleRespawned_Implementation(AShooterPlayerController* player_controller, APawn* NewPawn, bool IsFirstSpawn)
+{
+	FString playername = player_controller->GetCharacterName();
+
+
+	Log::GetLog()->info("Player: {}, Spawned!", playername.ToString());
+
+	AShooterCharacter* sc = static_cast<AShooterCharacter*>(NewPawn);
+
+	if (sc)
+	{
+		RetrieveBag(sc);
+	}
+
+	return HandleRespawned_Implementation_original(player_controller, NewPawn, IsFirstSpawn);
+}
+
 
 DECLARE_HOOK(AShooterCharacter_Die, bool, AShooterCharacter*, float, FDamageEvent*, AController*, AActor*);
 
@@ -10,16 +29,21 @@ bool Hook_AShooterCharacter_Die(AShooterCharacter* shooter_character, float Kill
 	Log::GetLog()->info("Player: {}, Dies!", playername.ToString());
 
 	return AShooterCharacter_Die_original(shooter_character, KillingDamage, DamageEvent, Killer, DamageCauser);
+
 }
 
 void SetHooks(bool addHooks = true)
 {
 	if (addHooks)
 	{
+		AsaApi::GetHooks().SetHook("AShooterPlayerController.HandleRespawned_Implementation(APawn*,bool)", &Hook_HandleRespawned_Implementation, &HandleRespawned_Implementation_original);
+
 		AsaApi::GetHooks().SetHook("AShooterCharacter.Die(float,FDamageEvent&,AController*,AActor*)", &Hook_AShooterCharacter_Die, &AShooterCharacter_Die_original);
 	}
 	else
 	{
+		AsaApi::GetHooks().DisableHook("AShooterPlayerController.HandleRespawned_Implementation(APawn*,bool)", &Hook_HandleRespawned_Implementation);
+
 		AsaApi::GetHooks().DisableHook("AShooterCharacter.Die(float,FDamageEvent&,AController*,AActor*)", &Hook_AShooterCharacter_Die);
 	}
 }
