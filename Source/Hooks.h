@@ -11,12 +11,7 @@ void Hook_HandleRespawned_Implementation(AShooterPlayerController* player_contro
 
 	HandleRespawned_Implementation_original(player_controller, NewPawn, IsFirstSpawn);
 
-	AShooterCharacter* sc = static_cast<AShooterCharacter*>(NewPawn);
-
-	if (sc)
-	{
-		FindPlayerCorpse(sc);
-	}
+	FindPlayerCorpse(player_controller);
 }
 
 

@@ -9,24 +9,22 @@ void DeleteItems(UPrimalInventoryComponent* inv_comp, TArray<UPrimalItem*> for_d
 	}
 }
 
-void FindPlayerCorpse(AShooterCharacter* shooter_character)
+void FindPlayerCorpse(AShooterPlayerController* player_controller)
 {
 	Log::GetLog()->info("{} called!", __FUNCTION__);
-	AShooterPlayerController* spc = static_cast<AShooterPlayerController*>(shooter_character->GetOwnerController());
-
-	if (!spc)
+	if (!player_controller)
 	{
 		Log::GetLog()->info("AShooterPlayerController is invalid!");
 		return;
 	}
 
-	UPrimalInventoryComponent* newInvComp = spc->GetPlayerInventoryComponent();
+	UPrimalInventoryComponent* newInvComp = player_controller->GetPlayerInventoryComponent();
 
 	if (!newInvComp) return;
 
 	TArray<AShooterCharacter*> corpses = DeathBagRetriever::corpses.FilterByPredicate([&](AShooterCharacter* sc)
 		{
-			return sc->GetLinkedPlayerDataID() == shooter_character->GetLinkedPlayerDataID();
+			return static_cast<int>(sc->GetLinkedPlayerDataID()) == player_controller->GetLinkedPlayerID();
 		});
 
 	for (AShooterCharacter* corpse : corpses)
