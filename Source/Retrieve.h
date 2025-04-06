@@ -54,6 +54,8 @@ void FindPlayerCorpse(AShooterPlayerController* player_controller)
 			forDelete.Add(eItem);
 
 			eItem->AddToInventory(newInvComp, isEquipped, true, &eItem->ItemIDField(), false, false, false, false, false);
+
+			Log::GetLog()->info("item transferred: {}", eItem->DescriptiveNameBaseField().ToString());
 		}
 
 		// Handle Inventory items
@@ -81,6 +83,8 @@ void FindPlayerCorpse(AShooterPlayerController* player_controller)
 			// finaly transfer
 			bool addToSlot = iItem->SlotIndexField() > -1;
 			iItem->AddToInventory(newInvComp, false, addToSlot, &iItem->ItemIDField(), true, true, false, false, false);
+
+			Log::GetLog()->info("item transferred: {}", iItem->DescriptiveNameBaseField().ToString());
 		}
 
 		DeleteItems(corpseInvComp, forDelete);
