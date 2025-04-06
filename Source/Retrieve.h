@@ -138,6 +138,12 @@ void RetrieveBag(AShooterCharacter* shooter_character)
 
 	AShooterPlayerController* spc = static_cast<AShooterPlayerController*>(shooter_character->GetOwnerController());
 
+	if (!spc->LastDeathPrimalCharacterField())
+	{
+		Log::GetLog()->info("LastDeathPrimalCharacterField is invalid!");
+		return;
+	}
+
 	// Player Corpse still available
 	if (spc->LastDeathPrimalCharacterField().Get())
 	{
