@@ -35,11 +35,13 @@ void FindPlayerCorpse(AShooterPlayerController* player_controller)
 		
 		UPrimalInventoryComponent* corpseInvComp = corpseCharacter->MyInventoryComponentField();
 
-		if (!corpseInvComp) return;
+		if (!corpseInvComp) continue;
 
 		// Handle Equipped items
 		TArray<UPrimalItem*> equippedItems = corpseInvComp->EquippedItemsField();
 		TArray<UPrimalItem*> forDelete;
+
+		Log::GetLog()->info("equippedItems: {}", equippedItems.Num());
 
 		for (UPrimalItem* eItem : equippedItems)
 		{
@@ -56,6 +58,8 @@ void FindPlayerCorpse(AShooterPlayerController* player_controller)
 
 		// Handle Inventory items
 		TArray<UPrimalItem*> invItems = corpseInvComp->InventoryItemsField();
+
+		Log::GetLog()->info("invItems: {}", invItems.Num());
 
 		for (UPrimalItem* iItem : invItems)
 		{
