@@ -34,11 +34,13 @@ void FindPlayerCorpse(AShooterPlayerController* player_controller)
 	}
 	ACharacter* character = static_cast<ACharacter*>(player_controller->CharacterField().Get());
 	
-	FVector Dest = player_controller->LastControlledPlayerCharacterField().Get()->GetLocation();
-	FRotator Rot = FRotator(double(0), double(0), double(0));
+	FVector vDest = player_controller->LastControlledPlayerCharacterField().Get()->GetLocation();
+
+	UE::Math::TVector<double> Dest = UE::Math::TVector<double>(vDest.X, vDest.Y, vDest.Z);
+	FRotator Rot = UE::Math::TRotator<double>(0,0,0);
 	//character->TeleportTo(&Dest, &Rot, false, false);
-	UPrimalGlobals::SimpleTeleportTo(player_controller->LastControlledPlayerCharacterField().Get()->OwnerField(), &Dest, &Rot);
-	Log::GetLog()->info("{} {} {}",Dest.X, Dest.Y, Dest.Z);
+	UPrimalGlobals::SimpleTeleportTo(player_controller->LastControlledPlayerCharacterField().Get()->OwnerField(), Dest, Rot);
+	//Log::GetLog()->info("{} {} {}",Dest.X, Dest.Y, Dest.Z);
 
 	UPrimalInventoryComponent* corpseInvComp = player_controller->LastControlledPlayerCharacterField().Get()->MyInventoryComponentField();
 
