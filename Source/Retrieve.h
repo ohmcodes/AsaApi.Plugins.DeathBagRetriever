@@ -13,7 +13,7 @@ void FindPlayerCorpse(AShooterPlayerController* player_controller)
 {
 	Log::GetLog()->info("{} called!", __FUNCTION__);
 
-	UPrimalInventoryComponent* corpseInvComp = player_controller->LastDeathPrimalCharacterField().Get()->MyInventoryComponentField();
+	UPrimalInventoryComponent* corpseInvComp = player_controller->LastDeathPrimalCharacterField()->MyInventoryComponentField();
 
 	if (!corpseInvComp) return;
 
@@ -145,7 +145,7 @@ void RetrieveBag(AShooterCharacter* shooter_character)
 	}
 
 	// Player Corpse still available
-	if (spc->LastDeathPrimalCharacterField().Get())
+	if (spc->LastDeathPrimalCharacterField())
 	{
 		Log::GetLog()->info("Corpse Exists!");
 		FindPlayerCorpse(spc);
