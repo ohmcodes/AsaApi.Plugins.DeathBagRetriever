@@ -172,7 +172,7 @@ void CheckCallback(AShooterPlayerController* pc, FString* param, int, int)
 		return;
 	}
 
-	if (!pc->LastDeathPrimalCharacterField().Get())
+	if (!pc->LastDeathPrimalCharacterField())
 	{
 		Log::GetLog()->info("LastDeathPrimalCharacterField is invalid!");
 		return;
