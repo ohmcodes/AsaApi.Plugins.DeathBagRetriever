@@ -250,7 +250,6 @@ void KillMeCallBack(AShooterPlayerController* player_controller, FString* param,
 
 void TeleportCallBack(AShooterPlayerController* player_controller, FString* param, int, int)
 {
-	//
 
 	ACharacter* character = static_cast<ACharacter*>(player_controller->CharacterField().Get());
 
