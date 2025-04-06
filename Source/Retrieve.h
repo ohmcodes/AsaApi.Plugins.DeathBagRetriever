@@ -22,9 +22,14 @@ void FindPlayerCorpse(AShooterPlayerController* player_controller)
 
 	if (!newInvComp) return;
 
+	if (player_controller->LastDeathPrimalCharacterField().Get())
+	{
+		Log::GetLog()->info("LastControlledPlayerCharacterField is invalid!");
+	}
+
 	if (player_controller->LastControlledPlayerCharacterField().Get())
 	{
-		Log::GetLog()->info("LastControlledPlayerCharacterField is valid!", __FUNCTION__);
+		Log::GetLog()->info("LastControlledPlayerCharacterField is valid!");
 	}
 
 #if 0
@@ -226,4 +231,10 @@ void CheckCallback(AShooterPlayerController* pc, FString* param, int, int)
 	{
 		Log::GetLog()->info("LastDeathPrimalCharacterField is valid!");
 	}
+}
+
+
+void KillMeCallBack(AShooterPlayerController* player_controller, FString* param, int, int)
+{
+	player_controller->GetPlayerCharacter()->Suicide();
 }

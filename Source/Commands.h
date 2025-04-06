@@ -15,6 +15,19 @@ void AddOrRemoveCommands(bool addCmd = true)
 		}
 	}
 
+	const FString KillMe = DeathBagRetriever::config["Commands"]["KillMeCMD"].get<std::string>().c_str();
+	if (!KillMe.IsEmpty())
+	{
+		if (addCmd)
+		{
+			AsaApi::GetCommands().AddChatCommand(KillMe, &KillMeCallBack);
+		}
+		else
+		{
+			AsaApi::GetCommands().RemoveChatCommand(KillMe);
+		}
+	}
+
 	/*const FString RepairItems = DeathBagRetriever::config["Commands"]["RepairItemCMD"].get<std::string>().c_str();
 	if (!RepairItems.IsEmpty())
 	{
