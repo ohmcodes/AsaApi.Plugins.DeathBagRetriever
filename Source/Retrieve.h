@@ -27,6 +27,8 @@ void FindPlayerCorpse(AShooterPlayerController* player_controller)
 			return static_cast<int>(sc->GetLinkedPlayerDataID()) == player_controller->GetLinkedPlayerID();
 		});
 
+	Log::GetLog()->info("Corpses: {}", corpses.Num());
+
 	for (AShooterCharacter* corpse : corpses)
 	{
 		AShooterCharacter* corpseCharacter = static_cast<AShooterCharacter*>(corpse);
