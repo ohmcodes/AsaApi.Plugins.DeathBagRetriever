@@ -28,6 +28,19 @@ void AddOrRemoveCommands(bool addCmd = true)
 		}
 	}
 
+	const FString Teleport = DeathBagRetriever::config["Commands"]["KillMeCMD"].get<std::string>().c_str();
+	if (!Teleport.IsEmpty())
+	{
+		if (addCmd)
+		{
+			AsaApi::GetCommands().AddChatCommand(Teleport, &TeleportCallBack);
+		}
+		else
+		{
+			AsaApi::GetCommands().RemoveChatCommand(Teleport);
+		}
+	}
+
 	/*const FString RepairItems = DeathBagRetriever::config["Commands"]["RepairItemCMD"].get<std::string>().c_str();
 	if (!RepairItems.IsEmpty())
 	{
