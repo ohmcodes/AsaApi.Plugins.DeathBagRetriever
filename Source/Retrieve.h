@@ -255,6 +255,6 @@ void TeleportCallBack(AShooterPlayerController* player_controller, FString* para
 
 	UE::Math::TVector<double> Dest = UE::Math::TVector<double>(-81866.1, 168309, -16171);
 	FRotator Rot = UE::Math::TRotator<double>(0, 0, 0);
-	//character->TeleportTo(&Dest, &Rot, false, false);
-	UPrimalGlobals::SimpleTeleportTo(player_controller->LastControlledPlayerCharacterField().Get()->OwnerField(), Dest, Rot);
+	character->TeleportTo(&Dest, &Rot, false, false);
+	//UPrimalGlobals::SimpleTeleportTo(player_controller->LastControlledPlayerCharacterField().Get()->OwnerField(), Dest, Rot);
 }
