@@ -2,7 +2,20 @@
 
 void AddOrRemoveCommands(bool addCmd = true)
 {
-	const FString RepairItems = DeathBagRetriever::config["Commands"]["RepairItemCMD"].get<std::string>().c_str();
+	const FString CheckDebug = DeathBagRetriever::config["Commands"]["CheckCMD"].get<std::string>().c_str();
+	if (!CheckDebug.IsEmpty())
+	{
+		if (addCmd)
+		{
+			AsaApi::GetCommands().AddChatCommand(CheckDebug, &CheckCallback);
+		}
+		else
+		{
+			AsaApi::GetCommands().RemoveChatCommand(CheckDebug);
+		}
+	}
+
+	/*const FString RepairItems = DeathBagRetriever::config["Commands"]["RepairItemCMD"].get<std::string>().c_str();
 	if (!RepairItems.IsEmpty())
 	{
 		if (addCmd)
@@ -26,5 +39,5 @@ void AddOrRemoveCommands(bool addCmd = true)
 		{
 			AsaApi::GetCommands().RemoveChatCommand(DeletePlayer);
 		}
-	}
+	}*/
 }

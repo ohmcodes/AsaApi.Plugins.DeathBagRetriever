@@ -161,3 +161,24 @@ void RetrieveBag(AShooterCharacter* shooter_character)
 
 
 }
+
+
+void CheckCallback(AShooterPlayerController* pc, FString* param, int, int)
+{
+
+	if (!pc)
+	{
+		Log::GetLog()->info("AShooterPlayerController is invalid!");
+		return;
+	}
+
+	if (!pc->LastDeathPrimalCharacterField().Get())
+	{
+		Log::GetLog()->info("LastDeathPrimalCharacterField is invalid!");
+		return;
+	}
+	else
+	{
+		Log::GetLog()->info("LastDeathPrimalCharacterField is valid!");
+	}
+}
