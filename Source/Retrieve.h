@@ -45,6 +45,9 @@ void FindPlayerCorpse(AShooterPlayerController* player_controller)
 
 		for (UPrimalItem* eItem : equippedItems)
 		{
+			if (eItem->bIsEngram().Get()) continue;
+			if (eItem->IsItemSkin(true)) continue;
+
 			bool isEquipped;
 			if (!eItem->IsBroken())
 			{
@@ -66,6 +69,8 @@ void FindPlayerCorpse(AShooterPlayerController* player_controller)
 		for (UPrimalItem* iItem : invItems)
 		{
 			if (iItem->bIsEngram().Get()) continue;
+
+			if (iItem->IsItemSkin(true)) continue;
 
 			// TODO expose this in config
 			// Resources
