@@ -54,11 +54,12 @@ void FindPlayerCorpse(AShooterPlayerController* player_controller)
 				isEquipped = true;
 			}
 
-			forDelete.Add(eItem);
+			//forDelete.Add(eItem);
 
 			corpseInvComp->RemoveItem(&eItem->ItemIDField(), false, false, true, false);
 
-			eItem->AddToInventory(newInvComp, isEquipped, true, &eItem->ItemIDField(), false, false, false, false, false);
+			bool addToSlot = eItem->SlotIndexField() > -1;
+			eItem->AddToInventory(newInvComp, isEquipped, addToSlot, &eItem->ItemIDField(), false, false, false, false, false);
 
 			Log::GetLog()->info("item transferred: {}", eItem->DescriptiveNameBaseField().ToString());
 		}
@@ -85,9 +86,9 @@ void FindPlayerCorpse(AShooterPlayerController* player_controller)
 			if (iItem->bIsEgg().Get() && iItem->UsesDurability()) continue;
 
 			// remove items
-			forDelete.Add(iItem);
+			//forDelete.Add(iItem);
 
-			corpseInvComp->RemoveItem(&iItem->ItemIDField(), false, false, true, false);
+			corpseInvComp->RemoveItem(&iItem->ItemIDField(), false, true, true, false);
 
 			// finaly transfer
 			bool addToSlot = iItem->SlotIndexField() > -1;
