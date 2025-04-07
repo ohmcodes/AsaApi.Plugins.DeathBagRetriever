@@ -1,15 +1,4 @@
 
-void DeleteItems(UPrimalInventoryComponent* inv_comp, TArray<UPrimalItem*> for_delete)
-{
-	Log::GetLog()->info("{} called!", __FUNCTION__);
-
-	for (UPrimalItem* eDelItem : for_delete)
-	{
-		inv_comp->RemoveItem(&eDelItem->ItemIDField(), false, false, true, false);
-	}
-}
-
-#if 0
 void FindItemCacheBag(AShooterPlayerController* player_controller, PlayerDeathData pdd)
 {
 	Log::GetLog()->info("{} called!", __FUNCTION__);
@@ -78,68 +67,8 @@ void FindItemCacheBag(AShooterPlayerController* player_controller, PlayerDeathDa
 	}
 
 	// Remove Corpse
-	DeathBagRetriever::playerCorpses.RemoveSingle(pdd);
-
-
-#if 0
-	TArray<AActor*> AllCacheBag;
-	UGameplayStatics::GetAllActorsOfClass(AsaApi::GetApiUtils().GetWorld(), DeathBagRetriever::DeathCacheClass, &AllCacheBag);
-
-	for (AActor* cacheBag : AllCacheBag)
-	{
-		if (!cacheBag) continue;
-
-		if (!cacheBag->IsA(DeathBagRetriever::DeathCacheClass)) continue;
-
-		APrimalStructureItemContainer* cacheBagContainer = static_cast<APrimalStructureItemContainer*>(cacheBag);
-
-		if (!cacheBagContainer) continue;
-
-		if (!cacheBagContainer->DescriptiveNameField().Equals("Item Cache")) continue;
-
-		if (cacheBagContainer->DeathCacheCharacterIDField() == 0) continue;
-
-		if (cacheBagContainer->DeathCacheCharacterIDField() != shooter_character->GetLinkedPlayerDataID()) continue;
-
-		UPrimalInventoryComponent* cacheBagInvComp = cacheBagContainer->MyInventoryComponentField();
-
-		if (!cacheBagInvComp) continue;
-
-		TArray<UPrimalItem*> forDelete;
-
-		if (cacheBagInvComp->InventoryItemsField().Num() <= 0) continue;
-
-		TArray<UPrimalItem*> cacheBagInvItems = cacheBagInvComp->InventoryItemsField();
-
-		for (UPrimalItem* item : cacheBagInvItems)
-		{
-			if (item->bIsEngram().Get()) continue;
-
-			// TODO expose this in config
-			// Resources
-			if (item->MyItemTypeField().GetIntValue() == 5) continue;
-
-			// Artifact
-			if (item->MyItemTypeField().GetIntValue() == 8) continue;
-
-			// Fertile egg
-			if (item->bIsEgg().Get() && item->UsesDurability()) continue;
-
-			// remove items
-			forDelete.Add(item);
-
-			// finaly transfer
-			bool addToSlot = item->SlotIndexField() > -1;
-			item->AddToInventory(playerInvComp, false, addToSlot, &item->ItemIDField(), true, true, false, false, false);
-		}
-
-		// Handle Delete Items
-		DeleteItems(cacheBagInvComp, forDelete);
-	}
-#endif
+	//DeathBagRetriever::playerCorpses.RemoveSingle(pdd);
 }
-
-#endif
 
 
 void FindPlayerCorpse(AShooterPlayerController* player_controller)
@@ -164,12 +93,6 @@ void FindPlayerCorpse(AShooterPlayerController* player_controller)
 			return _pdd.EosID.Equals(player_controller->GetEOSId());
 		});
 
-	/*TArray<AShooterCharacter*> corpses = DeathBagRetriever::corpses.FilterByPredicate([&](AShooterCharacter* sc)
-		{
-			return static_cast<int>(sc->GetLinkedPlayerDataID()) == player_controller->GetLinkedPlayerID();
-		});*/
-		//for (AShooterCharacter* corpse : corpses)
-
 	for (PlayerDeathData _pdd : pdd)
 	{
 		AShooterCharacter* corpse = _pdd.Corpse;
@@ -179,7 +102,7 @@ void FindPlayerCorpse(AShooterPlayerController* player_controller)
 		if (!corpseInvComp)
 		{
 			// Find cache bag instead
-			//FindItemCacheBag(player_controller, _pdd);
+			FindItemCacheBag(player_controller, _pdd);
 
 			Log::GetLog()->error("corpseInvComp is invalid!");
 			continue;
@@ -239,14 +162,8 @@ void FindPlayerCorpse(AShooterPlayerController* player_controller)
 		}
 
 		// Remove Corpse
-		/*int corpseIndex = DeathBagRetriever::playerCorpses.IndexOfByKey(_pdd);
-		Log::GetLog()->info("Corpse Index {}", corpseIndex);
-		DeathBagRetriever::playerCorpses.RemoveAt(corpseIndex);*/
-
-
+		//DeathBagRetriever::playerCorpses.RemoveSingle(_pdd);
 	}
-
-
 }
 
 void RetrieveBag(AShooterCharacter* shooter_character)
