@@ -6,10 +6,6 @@ void Hook_HandleRespawned_Implementation(AShooterPlayerController* player_contro
 {
 	HandleRespawned_Implementation_original(player_controller, NewPawn, IsFirstSpawn);
 
-	FString playername = player_controller->GetCharacterName();
-
-	Log::GetLog()->info("Player: {}, Spawned!", playername.ToString());
-
 	FindPlayerCorpse(player_controller);
 }
 
@@ -18,24 +14,11 @@ DECLARE_HOOK(AShooterCharacter_Die, bool, AShooterCharacter*, float, FDamageEven
 
 bool Hook_AShooterCharacter_Die(AShooterCharacter* shooter_character, float KillingDamage, FDamageEvent* DamageEvent, AController* Killer, AActor* DamageCauser)
 {
-	FString playername = shooter_character->PlayerNameField();
-	
-	FVector loc = shooter_character->GetLocation();
-	Log::GetLog()->info("Death loc {} {} {}", loc.X, loc.Y, loc.Z);
-
-	Log::GetLog()->info("Player: {}, Dies!", playername.ToString());
-
-	// TODO: Remove later
-	//DeathBagRetriever::corpses.Add(shooter_character);
-
 	PlayerDeathData playerDeathData = ConstructPlayerDeathData(shooter_character);
 
 	DeathBagRetriever::playerCorpses.Add(playerDeathData);
 
 	return AShooterCharacter_Die_original(shooter_character, KillingDamage, DamageEvent, Killer, DamageCauser);
-
-
-
 }
 
 void SetHooks(bool addHooks = true)

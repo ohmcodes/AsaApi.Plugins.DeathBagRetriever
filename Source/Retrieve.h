@@ -1,7 +1,7 @@
 
 void FindItemCacheBag(AShooterPlayerController* player_controller, PlayerDeathData pdd)
 {
-	Log::GetLog()->info("{} called!", __FUNCTION__);
+	//Log::GetLog()->info("{} called!", __FUNCTION__);
 
 	if (!player_controller) return;
 
@@ -46,7 +46,6 @@ void FindItemCacheBag(AShooterPlayerController* player_controller, PlayerDeathDa
 		for (UPrimalItem* item : cacheBagInvItems)
 		{
 			if (item->bIsEngram().Get()) continue;
-			if (item->IsItemSkin(true)) continue;
 
 			// TODO expose this in config
 			// Resources
@@ -67,26 +66,18 @@ void FindItemCacheBag(AShooterPlayerController* player_controller, PlayerDeathDa
 	}
 
 	// Remove Corpse
-	//DeathBagRetriever::playerCorpses.RemoveSingle(pdd);
+	DeathBagRetriever::playerCorpses.RemoveSingle(pdd);
 }
 
 
 void FindPlayerCorpse(AShooterPlayerController* player_controller)
 {
-	Log::GetLog()->info("{} called!", __FUNCTION__);
-	if (!player_controller)
-	{
-		Log::GetLog()->info("AShooterPlayerController is invalid!");
-		return;
-	}
+	//Log::GetLog()->info("{} called!", __FUNCTION__);
+	if (!player_controller) return;
 
 	UPrimalInventoryComponent* newInvComp = player_controller->GetPlayerInventoryComponent();
 
-	if (!newInvComp)
-	{
-		Log::GetLog()->error("newInvComp is invalid!");
-		return;
-	}
+	if (!newInvComp) return;
 
 	TArray<PlayerDeathData> pdd = DeathBagRetriever::playerCorpses.FilterByPredicate([&](const PlayerDeathData& _pdd)
 		{
@@ -104,7 +95,7 @@ void FindPlayerCorpse(AShooterPlayerController* player_controller)
 			// Find cache bag instead
 			FindItemCacheBag(player_controller, _pdd);
 
-			Log::GetLog()->error("corpseInvComp is invalid!");
+			//Log::GetLog()->error("corpseInvComp is invalid!");
 			continue;
 		}
 
@@ -116,7 +107,6 @@ void FindPlayerCorpse(AShooterPlayerController* player_controller)
 		for (UPrimalItem* eItem : equippedItems)
 		{
 			if (eItem->bIsEngram().Get()) continue;
-			if (eItem->IsItemSkin(true)) continue;
 
 			bool isEquipped;
 			if (!eItem->IsBroken())
@@ -140,7 +130,6 @@ void FindPlayerCorpse(AShooterPlayerController* player_controller)
 		for (UPrimalItem* iItem : invItems)
 		{
 			if (iItem->bIsEngram().Get()) continue;
-			if (iItem->IsItemSkin(true)) continue;
 
 			// TODO expose this in config
 			// Resources
@@ -166,38 +155,19 @@ void FindPlayerCorpse(AShooterPlayerController* player_controller)
 	}
 }
 
-void RetrieveBag(AShooterCharacter* shooter_character)
-{
-	Log::GetLog()->info("{} called!", __FUNCTION__);
-
-	AShooterPlayerController* spc = static_cast<AShooterPlayerController*>(shooter_character->GetOwnerController());
-
-	
-
-	//if (!spc) return;
-
-	//if (!spc->LastDeathPrimalCharacterField().Get())
-	//{
-	//	Log::GetLog()->info("LastDeathPrimalCharacterField is invalid!");
-	//	return;
-	//}
-
-	//// Player Corpse still available
-	//if (spc->LastDeathPrimalCharacterField().Get())
-	//{
-	//	Log::GetLog()->info("Corpse Exists!");
-	//	FindPlayerCorpse(spc);
-	//}
-	//// Item Cache Bag 
-	//else
-	//{
-	//	Log::GetLog()->info("Corpse Doesnt Exists!");
-	//	FindItemCacheBag(shooter_character);
-	//}
 
 
-}
 
+
+
+
+
+
+
+
+
+
+// --- DEGUB HERE --
 
 void CheckCallback(AShooterPlayerController* pc, FString* param, int, int)
 {
