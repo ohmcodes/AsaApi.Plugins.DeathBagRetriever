@@ -25,8 +25,6 @@ namespace DeathBagRetriever
 
 	inline UClass* DeathCacheClass;
 
-	inline int RetrievTrigger = 0;
-
 	inline TArray<PlayerDeathData> playerCorpses;
 
 }
