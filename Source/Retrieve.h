@@ -162,8 +162,7 @@ void FindPlayerCorpse(AShooterPlayerController* player_controller)
 		}
 
 		// Remove Corpse
-		//DeathBagRetriever::playerCorpses.RemoveSingle(_pdd);
-		DeathBagRetriever::playerCorpses.Remove(_pdd);
+		DeathBagRetriever::playerCorpses.RemoveSingle(_pdd);
 	}
 }
 
