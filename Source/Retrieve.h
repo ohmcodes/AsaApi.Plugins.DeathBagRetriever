@@ -39,8 +39,13 @@ void FindPlayerCorpse(AShooterPlayerController* player_controller)
 
 		if (!corpseInvComp)
 		{
+			// Remove Corpse
+			int corpseIndex = DeathBagRetriever::corpses.IndexOfByKey(corpse);
+			Log::GetLog()->info("Invalid Corpse Index {}", corpseIndex);
+			DeathBagRetriever::corpses.RemoveAt(corpseIndex);
+
 			Log::GetLog()->error("corpseInvComp is invalid!");
-			return;
+			continue;
 		}
 
 		// Handle Equipped items
@@ -95,6 +100,11 @@ void FindPlayerCorpse(AShooterPlayerController* player_controller)
 
 			Log::GetLog()->info("item inv transferred: {}", iItem->DescriptiveNameBaseField().ToString());
 		}
+
+		// Remove Corpse
+		int corpseIndex = DeathBagRetriever::corpses.IndexOfByKey(corpse);
+		Log::GetLog()->info("Corpse Index {}", corpseIndex);
+		DeathBagRetriever::corpses.RemoveAt(corpseIndex);
 	}
 }
 

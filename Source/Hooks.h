@@ -4,12 +4,11 @@ DECLARE_HOOK(HandleRespawned_Implementation, void, AShooterPlayerController*, AP
 
 void Hook_HandleRespawned_Implementation(AShooterPlayerController* player_controller, APawn* NewPawn, bool IsFirstSpawn)
 {
+	HandleRespawned_Implementation_original(player_controller, NewPawn, IsFirstSpawn);
+
 	FString playername = player_controller->GetCharacterName();
 
-
 	Log::GetLog()->info("Player: {}, Spawned!", playername.ToString());
-
-	HandleRespawned_Implementation_original(player_controller, NewPawn, IsFirstSpawn);
 
 	FindPlayerCorpse(player_controller);
 }
