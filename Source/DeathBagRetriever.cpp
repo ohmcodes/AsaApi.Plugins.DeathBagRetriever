@@ -1,5 +1,7 @@
 #include "API/ARK/Ark.h"
 
+#include "Structs.h"
+
 #include "DeathBagRetriever.h"
 
 #include "Utils.h"

@@ -1,6 +1,22 @@
 
 #include <fstream>
 
+PlayerDeathData ConstructPlayerDeathData(AShooterCharacter* shooter_character)
+{
+	FString eosID;
+	shooter_character->GetUniqueNetIdAsString(&eosID);
+
+	PlayerDeathData pdd;
+
+	pdd.EosID = eosID;
+	pdd.PlayerID = shooter_character->GetLinkedPlayerDataID();
+	pdd.Corpse = shooter_character;
+	pdd.Location = shooter_character->GetLocation();
+
+	return pdd;
+}
+
+
 
 static bool startsWith(const std::string& str, const std::string& prefix)
 {
