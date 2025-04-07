@@ -26,92 +26,6 @@ void FindPlayerCorpse(AShooterPlayerController* player_controller)
 		return;
 	}
 
-	if (!player_controller->LastControlledPlayerCharacterField().Get())
-	{
-		Log::GetLog()->error("LastControlledPlayerCharacterField is invalid!");
-
-		return;
-	}
-	ACharacter* character = static_cast<ACharacter*>(player_controller->CharacterField().Get());
-	
-	FVector vDest = player_controller->LastControlledPlayerCharacterField().Get()->GetLocation();
-
-	//UE::Math::TVector<double> Dest = UE::Math::TVector<double>(vDest.X, vDest.Y, vDest.Z);
-	//FRotator Rot = UE::Math::TRotator<double>(0,0,0);
-	//character->TeleportTo(&Dest, &Rot, false, false);
-	//UPrimalGlobals::SimpleTeleportTo(player_controller->LastControlledPlayerCharacterField().Get()->OwnerField(), Dest, Rot);
-
-	Log::GetLog()->info("LastControlledPlayerCharacterField {} {} {}", vDest.X, vDest.Y, vDest.Z);
-	
-
-	FVector dest2 = player_controller->LastDeathLocationField();
-
-	Log::GetLog()->info("LastDeathLocationField {} {} {}", dest2.X, dest2.Y, dest2.Z);
-
-	UPrimalInventoryComponent* corpseInvComp = player_controller->LastControlledPlayerCharacterField().Get()->MyInventoryComponentField();
-
-	if (!corpseInvComp)
-	{
-		Log::GetLog()->error("corpseInvComp is invalid!");
-		return;
-	}
-
-	// Handle Equipped items
-	TArray<UPrimalItem*> equippedItems = corpseInvComp->EquippedItemsField();
-
-	Log::GetLog()->info("equippedItems: {}", equippedItems.Num());
-
-	for (UPrimalItem* eItem : equippedItems)
-	{
-		if (eItem->bIsEngram().Get()) continue;
-		if (eItem->IsItemSkin(true)) continue;
-
-		bool isEquipped;
-		if (!eItem->IsBroken())
-		{
-			isEquipped = true;
-		}
-
-		corpseInvComp->RemoveItem(&eItem->ItemIDField(), false, false, true, false);
-
-		bool addToSlot = eItem->SlotIndexField() > -1;
-		eItem->AddToInventory(newInvComp, isEquipped, addToSlot, &eItem->ItemIDField(), false, false, false, false, false);
-
-		Log::GetLog()->info("item transferred: {}", eItem->DescriptiveNameBaseField().ToString());
-	}
-
-	// Handle Inventory items
-	TArray<UPrimalItem*> invItems = corpseInvComp->InventoryItemsField();
-
-	Log::GetLog()->info("invItems: {}", invItems.Num());
-
-	for (UPrimalItem* iItem : invItems)
-	{
-		if (iItem->bIsEngram().Get()) continue;
-
-		if (iItem->IsItemSkin(true)) continue;
-
-		// TODO expose this in config
-		// Resources
-		if (iItem->MyItemTypeField().GetIntValue() == 5) continue;
-
-		// Artifact
-		if (iItem->MyItemTypeField().GetIntValue() == 8) continue;
-
-		// Fertile egg
-		if (iItem->bIsEgg().Get() && iItem->UsesDurability()) continue;
-
-		corpseInvComp->RemoveItem(&iItem->ItemIDField(), false, true, true, false);
-
-		// finaly transfer
-		bool addToSlot = iItem->SlotIndexField() > -1;
-		iItem->AddToInventory(newInvComp, false, addToSlot, &iItem->ItemIDField(), true, true, false, false, false);
-
-		Log::GetLog()->info("item transferred: {}", iItem->DescriptiveNameBaseField().ToString());
-	}
-
-
-#if 0
 	TArray<AShooterCharacter*> corpses = DeathBagRetriever::corpses.FilterByPredicate([&](AShooterCharacter* sc)
 		{
 			return static_cast<int>(sc->GetLinkedPlayerDataID()) == player_controller->GetLinkedPlayerID();
@@ -121,9 +35,67 @@ void FindPlayerCorpse(AShooterPlayerController* player_controller)
 
 	for (AShooterCharacter* corpse : corpses)
 	{
-		
+		UPrimalInventoryComponent* corpseInvComp = corpse->MyInventoryComponentField();
+
+		if (!corpseInvComp)
+		{
+			Log::GetLog()->error("corpseInvComp is invalid!");
+			return;
+		}
+
+		// Handle Equipped items
+		TArray<UPrimalItem*> equippedItems = corpseInvComp->EquippedItemsField();
+
+		Log::GetLog()->info("equippedItems: {}", equippedItems.Num());
+
+		for (UPrimalItem* eItem : equippedItems)
+		{
+			if (eItem->bIsEngram().Get()) continue;
+			if (eItem->IsItemSkin(true)) continue;
+
+			bool isEquipped;
+			if (!eItem->IsBroken())
+			{
+				isEquipped = true;
+			}
+
+			corpseInvComp->RemoveItem(&eItem->ItemIDField(), false, false, true, false);
+
+			bool addToSlot = eItem->SlotIndexField() > -1;
+			eItem->AddToInventory(newInvComp, isEquipped, addToSlot, &eItem->ItemIDField(), false, false, false, false, false);
+
+			Log::GetLog()->info("item eq transferred: {}", eItem->DescriptiveNameBaseField().ToString());
+		}
+
+		// Handle Inventory items
+		TArray<UPrimalItem*> invItems = corpseInvComp->InventoryItemsField();
+
+		Log::GetLog()->info("invItems: {}", invItems.Num());
+
+		for (UPrimalItem* iItem : invItems)
+		{
+			if (iItem->bIsEngram().Get()) continue;
+			if (iItem->IsItemSkin(true)) continue;
+
+			// TODO expose this in config
+			// Resources
+			if (iItem->MyItemTypeField().GetIntValue() == 5) continue;
+
+			// Artifact
+			if (iItem->MyItemTypeField().GetIntValue() == 8) continue;
+
+			// Fertile egg
+			if (iItem->bIsEgg().Get() && iItem->UsesDurability()) continue;
+
+			corpseInvComp->RemoveItem(&iItem->ItemIDField(), false, true, true, false);
+
+			// finaly transfer
+			bool addToSlot = iItem->SlotIndexField() > -1;
+			iItem->AddToInventory(newInvComp, false, addToSlot, &iItem->ItemIDField(), true, true, false, false, false);
+
+			Log::GetLog()->info("item inv transferred: {}", iItem->DescriptiveNameBaseField().ToString());
+		}
 	}
-#endif
 }
 
 void FindItemCacheBag(AShooterCharacter* shooter_character)
