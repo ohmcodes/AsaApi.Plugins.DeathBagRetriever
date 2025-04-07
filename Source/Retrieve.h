@@ -159,12 +159,10 @@ void FindPlayerCorpse(AShooterPlayerController* player_controller)
 		return;
 	}
 
-	/*TArray<PlayerDeathData> pdd = DeathBagRetriever::playerCorpses.FilterByPredicate([&](const PlayerDeathData& _pdd)
+	TArray<PlayerDeathData> pdd = DeathBagRetriever::playerCorpses.FilterByPredicate([&](const PlayerDeathData& _pdd)
 		{
 			return _pdd.EosID.Equals(player_controller->GetEOSId());
-		});*/
-
-	TArray<PlayerDeathData> pdd = DeathBagRetriever::playerCorpses;
+		});
 
 	/*TArray<AShooterCharacter*> corpses = DeathBagRetriever::corpses.FilterByPredicate([&](AShooterCharacter* sc)
 		{
