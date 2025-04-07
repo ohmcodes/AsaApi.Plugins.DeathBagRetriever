@@ -169,7 +169,7 @@ void FindPlayerCorpse(AShooterPlayerController* player_controller)
 			return static_cast<int>(sc->GetLinkedPlayerDataID()) == player_controller->GetLinkedPlayerID();
 		});*/
 		//for (AShooterCharacter* corpse : corpses)
-#if 0
+
 	for (PlayerDeathData _pdd : pdd)
 	{
 		AShooterCharacter* corpse = _pdd.Corpse;
@@ -179,7 +179,7 @@ void FindPlayerCorpse(AShooterPlayerController* player_controller)
 		if (!corpseInvComp)
 		{
 			// Find cache bag instead
-			FindItemCacheBag(player_controller, _pdd);
+			//FindItemCacheBag(player_controller, _pdd);
 
 			Log::GetLog()->error("corpseInvComp is invalid!");
 			continue;
@@ -239,12 +239,14 @@ void FindPlayerCorpse(AShooterPlayerController* player_controller)
 		}
 
 		// Remove Corpse
-		int corpseIndex = DeathBagRetriever::playerCorpses.IndexOfByKey(_pdd);
+		/*int corpseIndex = DeathBagRetriever::playerCorpses.IndexOfByKey(_pdd);
 		Log::GetLog()->info("Corpse Index {}", corpseIndex);
-		DeathBagRetriever::playerCorpses.RemoveAt(corpseIndex);
+		DeathBagRetriever::playerCorpses.RemoveAt(corpseIndex);*/
+
+
 	}
 
-#endif
+
 }
 
 void RetrieveBag(AShooterCharacter* shooter_character)
