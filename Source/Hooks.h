@@ -10,7 +10,7 @@ void Hook_HandleRespawned_Implementation(AShooterPlayerController* player_contro
 
 	Log::GetLog()->info("Player: {}, Spawned!", playername.ToString());
 
-	//FindPlayerCorpse(player_controller);
+	FindPlayerCorpse(player_controller);
 }
 
 
@@ -28,9 +28,9 @@ bool Hook_AShooterCharacter_Die(AShooterCharacter* shooter_character, float Kill
 	// TODO: Remove later
 	//DeathBagRetriever::corpses.Add(shooter_character);
 
-	//PlayerDeathData playerDeathData = ConstructPlayerDeathData(shooter_character);
+	PlayerDeathData playerDeathData = ConstructPlayerDeathData(shooter_character);
 
-	//DeathBagRetriever::playerCorpses.Add(playerDeathData);
+	DeathBagRetriever::playerCorpses.Add(playerDeathData);
 
 	return AShooterCharacter_Die_original(shooter_character, KillingDamage, DamageEvent, Killer, DamageCauser);
 
