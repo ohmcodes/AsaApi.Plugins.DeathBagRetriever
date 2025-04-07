@@ -6,4 +6,7 @@ struct PlayerDeathData
 	AShooterCharacter* Corpse;
 	FVector Location;
 
+	bool operator==(const PlayerDeathData& other) const {
+		return EosID == other.EosID;
+	}
 };
